@@ -25,12 +25,24 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 # 创建 .ssh 目录并设置权限
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
 
-# 复制构建上下文中的公钥到容器内
-# 注意：构建时脚本会自动把 id_rsa.pub 放在 Dockerfile 同级目录
-COPY id_rsa.pub /root/.ssh/authorized_keys
+# 复制构建上下文中的公钥到容器内（如果存在）
+# 本地使用：构建时脚本会自动把 id_rsa.pub 放在 Dockerfile 同级目录
+# GitHub Actions：使用 GitHub 提供的 SSH 密钥
+COPY --chown=root:root id_rsa.pub* /tmp/ssh_keys/
 
-# 设置 authorized_keys 权限 (必须严格设置为 600)
-RUN chmod 600 /root/.ssh/authorized_keys
+# 处理 SSH 密钥配置
+RUN if [ -f "/tmp/ssh_keys/id_rsa.pub" ]; then \
+        cp /tmp/ssh_keys/id_rsa.pub /root/.ssh/authorized_keys && \
+        chmod 600 /root/.ssh/authorized_keys; \
+    elif [ -n "$SSH_PUBLIC_KEY" ]; then \
+        echo "$SSH_PUBLIC_KEY" > /root/.ssh/authorized_keys && \
+        chmod 600 /root/.ssh/authorized_keys; \
+    else \
+        echo "Warning: No SSH public key provided" && \
+        touch /root/.ssh/authorized_keys && \
+        chmod 600 /root/.ssh/authorized_keys; \
+    fi && \
+    rm -rf /tmp/ssh_keys
 
 # 安装必要的依赖包（fnm 和 Node.js 安装需要）
 RUN apt-get update && \
