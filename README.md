@@ -45,7 +45,7 @@ cd VibeRunner
 ./start-viberunner-cloud.ps1
 
 # 或指定自定义镜像和端口
-./start-viberunner-cloud.ps1 -Port 2223
+./start-viberunner-cloud.ps1 -Port 2222
 ```
 
 ### 方法二：本地构建镜像
@@ -64,7 +64,7 @@ cd VibeRunner
 ./setup.ps1
 
 # 或指定自定义版本和端口
-./setup.ps1 -UbuntuVer 24.04 -NodeVer 24 -Port 2223
+./setup.ps1 -UbuntuVer 24.04 -NodeVer 24 -Port 2222
 ```
 
 ## 🔧 IDE 连接配置
@@ -110,7 +110,7 @@ VibeRunner/
 ./setup.ps1
 
 # 自定义配置
-./setup.ps1 -UbuntuVer 24.04 -NodeVer 24 -Port 2223
+./setup.ps1 -Tag "2026.01.22.151527" -Port 2222
 ```
 
 ### 云端镜像命令
@@ -120,7 +120,7 @@ VibeRunner/
 ./start-viberunner-cloud.ps1
 
 # 自定义端口
-./start-viberunner-cloud.ps1 -Port 2223
+./start-viberunner-cloud.ps1 -Port 222
 ```
 
 ## 🌐 云端镜像
