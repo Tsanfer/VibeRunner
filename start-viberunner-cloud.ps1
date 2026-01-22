@@ -46,15 +46,27 @@ if (podman ps -a -q -f name=$CONTAINER_NAME) {
 
 # 启动新容器：
 # - 挂载代码目录
-# - 挂载公钥到容器的 authorized_keys（关键！）
+# - 挂载公钥到容器的临时目录
 # - 映射 SSH 端口
 Write-Host "🚀 正在启动容器..." -ForegroundColor Cyan
 podman run -d --name $CONTAINER_NAME `
   -v "${CODE_ROOT}:/workspace" `
-  -v "${PUB_KEY_PATH}:/root/.ssh/authorized_keys:ro" `
+  -v "${PUB_KEY_PATH}:/tmp/host_authorized_keys:ro" `
   -w /workspace `
   -p ${Port}:22 `
   $Image
+
+# 等待容器启动
+Start-Sleep -Seconds 3
+
+# 复制公钥到正确位置并设置权限
+Write-Host "🔧 配置 SSH 公钥权限..." -ForegroundColor Cyan
+podman exec $CONTAINER_NAME bash -c "cp /tmp/host_authorized_keys /root/.ssh/authorized_keys && chown root:root /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys"
+
+# 验证公钥配置
+Write-Host "📋 公钥配置验证：" -ForegroundColor Cyan
+podman exec $CONTAINER_NAME ls -la /root/.ssh/authorized_keys
+podman exec $CONTAINER_NAME head -n 1 /root/.ssh/authorized_keys
 
 # 4. 🧪 可选：测试连接（简单验证端口是否监听）
 Start-Sleep -Seconds 2
