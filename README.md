@@ -45,7 +45,7 @@ cd VibeRunner
 ./start-viberunner-cloud.ps1
 
 # 或指定自定义镜像和端口
-./start-viberunner-cloud.ps1 -Image your-custom-image -Port 2223
+./start-viberunner-cloud.ps1 -Port 2223
 ```
 
 ### 方法二：本地构建镜像
@@ -53,7 +53,7 @@ cd VibeRunner
 1. **克隆项目**
 
 ```bash
-git clone https://github.com/yourusername/VibeRunner.git
+git clone https://github.com/Tsanfer/VibeRunner.git
 cd VibeRunner
 ```
 
@@ -107,20 +107,20 @@ VibeRunner/
 
 ```powershell
 # 基本构建
-t./setup.ps1
+./setup.ps1
 
 # 自定义配置
-t./setup.ps1 -UbuntuVer 24.04 -NodeVer 24 -Port 2223
+./setup.ps1 -UbuntuVer 24.04 -NodeVer 24 -Port 2223
 ```
 
 ### 云端镜像命令
 
 ```powershell
 # 使用默认云端镜像
-t./start-viberunner-cloud.ps1
+./start-viberunner-cloud.ps1
 
-# 自定义镜像和端口
-t./start-viberunner-cloud.ps1 -Image your-custom-image -Port 2223
+# 自定义端口
+./start-viberunner-cloud.ps1 -Port 2223
 ```
 
 ## 🌐 云端镜像
@@ -129,10 +129,7 @@ t./start-viberunner-cloud.ps1 -Image your-custom-image -Port 2223
 
 ```bash
 # 拉取最新版本
-docker pull ghcr.io/tsanfer/viberunner
-
-# 拉取特定版本
-docker pull ghcr.io/tsanfer/viberunner:tag
+podman pull ghcr.io/tsanfer/viberunner
 ```
 
 ## 🔒 安全说明
