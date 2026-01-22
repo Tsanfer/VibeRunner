@@ -33,13 +33,16 @@ COPY --chown=root:root id_rsa.pub* /tmp/ssh_keys/
 # 处理 SSH 密钥配置
 RUN if [ -f "/tmp/ssh_keys/id_rsa.pub" ]; then \
         cp /tmp/ssh_keys/id_rsa.pub /root/.ssh/authorized_keys && \
+        chown root:root /root/.ssh/authorized_keys && \
         chmod 600 /root/.ssh/authorized_keys; \
     elif [ -n "$SSH_PUBLIC_KEY" ]; then \
         echo "$SSH_PUBLIC_KEY" > /root/.ssh/authorized_keys && \
+        chown root:root /root/.ssh/authorized_keys && \
         chmod 600 /root/.ssh/authorized_keys; \
     else \
         echo "Warning: No SSH public key provided" && \
-        touch /root/.ssh/authorized_keys && \
+        echo "# Default public key for GitHub Actions" > /root/.ssh/authorized_keys && \
+        chown root:root /root/.ssh/authorized_keys && \
         chmod 600 /root/.ssh/authorized_keys; \
     fi && \
     rm -rf /tmp/ssh_keys
