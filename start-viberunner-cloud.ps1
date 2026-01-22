@@ -9,7 +9,7 @@
 #>
 
 param(
-    [string]$Image = "ghcr.io/tsanfer/viberunner:latest",
+    [string]$Image = "ghcr.io/tsanfer/viberunner",
     [int]$Port = 2222
 )
 
@@ -35,7 +35,7 @@ if (!(Test-Path $PRIV_KEY_PATH)) {
 
 # 2. 📥 拉取云端镜像
 Write-Host "📥 正在拉取镜像: $Image" -ForegroundColor Cyan
-podman pull $Image
+podman pull $Image --pull=always
 
 # 3. 🚀 启动容器
 # 先清理旧容器
