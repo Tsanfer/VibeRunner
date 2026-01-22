@@ -9,7 +9,7 @@
 #>
 
 param(
-    [string]$Image = "ghcr.io/tsanfer/viberunner",
+    [string]$Image = "ghcr.io/tsanfer/viberunner:latest",
     [int]$Port = 2222
 )
 
