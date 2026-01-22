@@ -40,8 +40,31 @@ podman pull $Image
 # 3. 🚀 启动容器
 # 先清理旧容器
 if (podman ps -a -q -f name=$CONTAINER_NAME) {
-    Write-Host "🔄 移除旧容器 [$CONTAINER_NAME]..." -ForegroundColor Yellow
-    podman rm -f $CONTAINER_NAME | Out-Null
+    Write-Host "🔄 检测到旧容器 [$CONTAINER_NAME]" -ForegroundColor Yellow
+    
+    # 显示确认提示
+    Write-Host "📋 是否删除旧容器 [$CONTAINER_NAME] 并启动新容器？" -ForegroundColor Cyan
+    Write-Host "   请输入 'y' 确认，'n' 取消: " -NoNewline -ForegroundColor White
+    
+    # 循环读取用户输入，直到输入有效为止
+    $validInput = $false
+    while (-not $validInput) {
+        # 读取用户输入，不区分大小写
+        $response = Read-Host
+        $response = $response.ToLower().Trim()
+        
+        if ($response -eq 'y') {
+            Write-Host "🔄 正在移除旧容器 [$CONTAINER_NAME]..." -ForegroundColor Yellow
+            podman rm -f $CONTAINER_NAME | Out-Null
+            Write-Host "✅ 旧容器已移除。" -ForegroundColor Green
+            $validInput = $true
+        } elseif ($response -eq 'n') {
+            Write-Host "❌ 操作已取消。" -ForegroundColor Red
+            exit 1
+        } else {
+            Write-Host "❌ 输入无效，请重新输入 'y' 或 'n'：" -NoNewline -ForegroundColor Red
+        }
+    }
 }
 
 # 启动新容器：
